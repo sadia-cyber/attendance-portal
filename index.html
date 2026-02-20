@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Attendance Portal</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-
 html, body{
   min-height:100vh;
   width:100%;
@@ -17,7 +16,6 @@ html, body{
   color:#fff;
   overflow-x:hidden;
 }
-
 body{
   display:flex;
   justify-content:center;
@@ -58,27 +56,50 @@ body{
   box-shadow:0 15px 40px rgba(0,0,0,0.5);
   width:100%;
   max-width:700px;
+  transition: all 0.3s ease;
 }
 
-.login-box{max-width:420px;margin:120px auto;text-align:center;}
+.login-box{
+  max-width:95%;
+  margin:60px auto 0;
+  text-align:center;
+}
 
 h2,h3,h4{margin-bottom:20px;font-weight:600;text-align:center;}
-
 .info-box{margin-bottom:25px;line-height:2;font-size:16px;}
 
 input,select{
   width:100%;
-  padding:12px;
+  padding:12px 15px;
   margin:10px 0;
   border:none;
   border-radius:12px;
   background:rgba(255,255,255,0.1);
   color:#fff;
+  font-size:14px;
+}
+input::placeholder{color:#ddd;}
+select option{background:#203a43;color:#fff;}
+
+.password-wrapper{
+  position:relative;
+}
+.password-wrapper input{
+  padding-right:45px;
+}
+.password-wrapper .toggle-password{
+  position:absolute;
+  top:50%;
+  right:12px;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+  font-size:14px;
 }
 
-select option{background:#203a43;color:#fff;}
-input::placeholder{color:#ddd;}
-
+/* Buttons */
 button{
   display:block;
   margin:20px auto;
@@ -91,15 +112,11 @@ button{
   transition:0.3s;
   font-weight:500;
 }
-
 button:hover{
   transform:translateY(-3px);
   box-shadow:0 8px 25px rgba(0,0,0,0.4);
 }
-
-.logout-btn{
-  background:linear-gradient(45deg,#ff512f,#dd2476);
-}
+.logout-btn{background:linear-gradient(45deg,#ff512f,#dd2476);}
 
 /* Tables */
 .table-wrapper-vertical{
@@ -109,22 +126,10 @@ button:hover{
   border-radius:12px;
   background:rgba(255,255,255,0.05);
 }
-
 .table-wrapper-vertical table{
   width:100%;
   border-collapse:collapse;
   min-width:500px;
-}
-
-/* Student panel wide & scroll-free */
-#studentPanel .card{
-  max-width:650px;
-  width:100%;
-}
-
-#studentPanel .table-wrapper-vertical{
-  max-height:none;
-  overflow:visible;
 }
 
 th,td{
@@ -132,32 +137,30 @@ th,td{
   text-align:center;
   font-size:14px;
 }
-
 th{background:rgba(255,255,255,0.1);}
 tr:nth-child(even){background:rgba(255,255,255,0.05);}
-
-.badge{
-  padding:6px 12px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:500;
-}
-
+.badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;}
 .present{background:#00c853;}
 .absent{background:#d50000;}
 .hidden{display:none;}
 
-/* Responsive */
-@media (max-width:1024px){
-  .card{max-width:90%;}
+/* Student panel wide & scroll-free */
+#studentPanel .card{
+  max-width:650px;
+  width:100%;
+}
+#studentPanel .table-wrapper-vertical{
+  max-height:none;
+  overflow:visible;
 }
 
+/* Responsive */
+@media (max-width:1024px){.card{max-width:90%;}}
 @media (max-width:768px){
   .card{padding:22px;}
   input,select,button{font-size:14px;}
   th,td{padding:8px;font-size:13px;}
 }
-
 @media (max-width:480px){
   body{padding:15px 10px;}
   .card{padding:18px;border-radius:15px;}
@@ -177,7 +180,10 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <div id="loginSection" class="card login-box">
 <h2>Attendance Portal</h2>
 <input type="text" id="username" placeholder="Username">
-<input type="password" id="password" placeholder="Password">
+<div class="password-wrapper">
+  <input type="password" id="password" placeholder="Password">
+  <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
+</div>
 <button onclick="login()">Login</button>
 </div>
 
@@ -185,35 +191,28 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <div id="studentPanel" class="hidden">
 <div class="card">
 <h3>Student Dashboard</h3>
-
 <div class="info-box">
 <p><strong>Name:</strong> <span id="studentName"></span></p>
 <p><strong>Class:</strong> <span id="studentClass"></span></p>
 <p><strong>Roll No:</strong> <span id="studentRoll"></span></p>
 </div>
-
 <select id="statusSelect">
 <option value="Present">Present</option>
 <option value="Absent">Absent</option>
 </select>
-
 <button onclick="markAttendance()">Submit Attendance</button>
-
 <div class="table-wrapper-vertical">
-  <table id="studentTable">
-    <tr><th>Date</th><th>Time</th><th>Status</th></tr>
-  </table>
+<table id="studentTable">
+<tr><th>Date</th><th>Time</th><th>Status</th></tr>
+</table>
 </div>
-
 <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 </div>
 
 <!-- ADMIN PANEL -->
 <div id="adminPanel" class="hidden">
-
 <div class="card"><h2>Admin Panel</h2></div>
-
 <div class="card">
 <h4>Add Student</h4>
 <input type="text" id="newStudent" placeholder="Student Username">
@@ -228,7 +227,6 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 </select>
 <button onclick="addStudent()">Add Student</button>
 </div>
-
 <div class="card">
 <h4>Students By Class</h4>
 <select id="classFilterStudents" onchange="loadStudentsByClass()">
@@ -238,14 +236,12 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <option>FA</option>
 <option>FSC</option>
 </select>
-
 <div class="table-wrapper-vertical">
 <table id="studentsTable">
 <tr><th>Class</th><th>Roll No</th><th>Name</th><th>Action</th></tr>
 </table>
 </div>
 </div>
-
 <div class="card">
 <h4>Attendance Report</h4>
 <select id="classFilterAttendance" onchange="loadAttendance()">
@@ -255,87 +251,46 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <option>FA</option>
 <option>FSC</option>
 </select>
-
 <div class="table-wrapper-vertical">
 <table id="adminTable">
 <tr><th>Name</th><th>Class</th><th>Roll No</th><th>Date</th><th>Time</th><th>Status</th></tr>
 </table>
 </div>
-
 <button onclick="downloadReport()">Download CSV</button>
 </div>
-
 <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
 
 </div>
 
 <script>
-/* Spider Animation Fixed */
-const canvas = document.getElementById("spiderCanvas");
-const ctx = canvas.getContext("2d");
-
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
+/* Spider Animation */
+const canvas=document.getElementById("spiderCanvas");
+const ctx=canvas.getContext("2d");
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-let particles = [];
-const particleCount = 80;
-const connectDistance = 120;
-
-for (let i = 0; i < particleCount; i++) {
-    particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5),
-        vy: (Math.random() - 0.5)
-    });
-}
-
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = "white";
-        ctx.fill();
-    }
-
-    // Connect lines
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            let dx = particles[i].x - particles[j].x;
-            let dy = particles[i].y - particles[j].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < connectDistance) {
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.strokeStyle = `rgba(255,255,255,${0.1 + 0.2*(connectDistance-distance)/connectDistance})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            }
-        }
-    }
-
-    requestAnimationFrame(animate);
-}
+window.addEventListener("resize",resizeCanvas);
+let particles=[];
+const particleCount=80;
+const connectDistance=120;
+for(let i=0;i<particleCount;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5),vy:(Math.random()-0.5)});}
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);
+for(let i=0;i<particles.length;i++){let p=particles[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;
+ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();}
+for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){let dx=particles[i].x-particles[j].x;let dy=particles[i].y-particles[j].y;let dist=Math.sqrt(dx*dx+dy*dy);if(dist<connectDistance){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(255,255,255,${0.1+0.2*(connectDistance-dist)/connectDistance})`;ctx.lineWidth=1;ctx.stroke();}}}
+requestAnimationFrame(animate);}
 animate();
 
-/* Storage & login */
+/* Storage & Login */
 if(!localStorage.getItem("users")){localStorage.setItem("users",JSON.stringify([{username:"admin",password:"admin123",role:"admin"}]));}
 if(!localStorage.getItem("attendance")){localStorage.setItem("attendance",JSON.stringify([]));}
+
+function togglePassword(){
+  const pwd=document.getElementById("password");
+  const btn=document.querySelector(".toggle-password");
+  if(pwd.type==="password"){pwd.type="text";btn.innerText="Hide";}
+  else{pwd.type="password";btn.innerText="Show";}
+}
 
 function login(){
 let users=JSON.parse(localStorage.getItem("users"));
@@ -344,82 +299,17 @@ if(!found){alert("Invalid Login");return;}
 localStorage.setItem("currentUser",JSON.stringify(found));
 loginSection.classList.add("hidden");
 if(found.role==="admin"){adminPanel.classList.remove("hidden");}
-else{
-studentPanel.classList.remove("hidden");
-studentName.innerText=found.username;
-studentClass.innerText=found.className;
-studentRoll.innerText=found.rollNo;
-loadStudentAttendance();
-}}
+else{studentPanel.classList.remove("hidden");studentName.innerText=found.username;studentClass.innerText=found.className;studentRoll.innerText=found.rollNo;loadStudentAttendance();}
+}
 
 function logout(){localStorage.removeItem("currentUser");location.reload();}
-
-function addStudent(){
-let users=JSON.parse(localStorage.getItem("users"));
-users.push({username:newStudent.value,password:newPass.value,rollNo:newRoll.value,className:newClass.value,role:"student"});
-localStorage.setItem("users",JSON.stringify(users));
-alert("Student Added");
-newStudent.value="";newPass.value="";newRoll.value="";newClass.value="";
-if(classFilterStudents.value) loadStudentsByClass();
-}
-
-function loadStudentsByClass(){
-let selected=classFilterStudents.value;
-let users=JSON.parse(localStorage.getItem("users"));
-studentsTable.innerHTML="<tr><th>Class</th><th>Roll No</th><th>Name</th><th>Action</th></tr>";
-users.filter(u=>u.role==="student"&&u.className===selected)
-.forEach(u=>{studentsTable.innerHTML+=`<tr><td>${u.className}</td><td>${u.rollNo}</td><td>${u.username}</td><td><button onclick="deleteStudent('${u.username}')">Delete</button></td></tr>`;});
-}
-
-function deleteStudent(username){
-let users=JSON.parse(localStorage.getItem("users"));
-users=users.filter(u=>u.username!==username);
-localStorage.setItem("users",JSON.stringify(users));
-loadStudentsByClass();
-}
-
-function markAttendance(){
-let user=JSON.parse(localStorage.getItem("currentUser"));
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-let now=new Date();
-attendance.push({username:user.username,rollNo:user.rollNo,className:user.className,date:now.toLocaleDateString(),time:now.toLocaleTimeString(),status:statusSelect.value});
-localStorage.setItem("attendance",JSON.stringify(attendance));
-loadStudentAttendance();
-}
-
-function loadStudentAttendance(){
-let user=JSON.parse(localStorage.getItem("currentUser"));
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-studentTable.innerHTML="<tr><th>Date</th><th>Time</th><th>Status</th></tr>";
-attendance.filter(a=>a.username===user.username).forEach(a=>{
-let badge=a.status==="Present"?"present":"absent";
-studentTable.innerHTML+=`<tr><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;
-});
-}
-
-function loadAttendance(){
-let selected=classFilterAttendance.value;
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-adminTable.innerHTML="<tr><th>Name</th><th>Class</th><th>Roll No</th><th>Date</th><th>Time</th><th>Status</th></tr>";
-attendance.filter(a=>selected==="all"||a.className===selected).forEach(a=>{
-let badge=a.status==="Present"?"present":"absent";
-adminTable.innerHTML+=`<tr><td>${a.username}</td><td>${a.className}</td><td>${a.rollNo}</td><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;
-});
-}
-
-function downloadReport(){
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-let csv="Name,Class,Roll No,Date,Time,Status\n";
-attendance.forEach(a=>{
-csv+=`${a.username},${a.className},${a.rollNo},${a.date},${a.time},${a.status}\n`;
-});
-let blob=new Blob([csv],{type:"text/csv"});
-let url=window.URL.createObjectURL(blob);
-let a=document.createElement("a");
-a.href=url;
-a.download="attendance_report.csv";
-a.click();
-}
+function addStudent(){let users=JSON.parse(localStorage.getItem("users"));users.push({username:newStudent.value,password:newPass.value,rollNo:newRoll.value,className:newClass.value,role:"student"});localStorage.setItem("users",JSON.stringify(users));alert("Student Added");newStudent.value="";newPass.value="";newRoll.value="";newClass.value="";if(classFilterStudents.value) loadStudentsByClass();}
+function loadStudentsByClass(){let selected=classFilterStudents.value;let users=JSON.parse(localStorage.getItem("users"));studentsTable.innerHTML="<tr><th>Class</th><th>Roll No</th><th>Name</th><th>Action</th></tr>";users.filter(u=>u.role==="student"&&u.className===selected).forEach(u=>{studentsTable.innerHTML+=`<tr><td>${u.className}</td><td>${u.rollNo}</td><td>${u.username}</td><td><button onclick="deleteStudent('${u.username}')">Delete</button></td></tr>`;});}
+function deleteStudent(username){let users=JSON.parse(localStorage.getItem("users"));users=users.filter(u=>u.username!==username);localStorage.setItem("users",JSON.stringify(users));loadStudentsByClass();}
+function markAttendance(){let user=JSON.parse(localStorage.getItem("currentUser"));let attendance=JSON.parse(localStorage.getItem("attendance"));let now=new Date();attendance.push({username:user.username,rollNo:user.rollNo,className:user.className,date:now.toLocaleDateString(),time:now.toLocaleTimeString(),status:statusSelect.value});localStorage.setItem("attendance",JSON.stringify(attendance));loadStudentAttendance();}
+function loadStudentAttendance(){let user=JSON.parse(localStorage.getItem("currentUser"));let attendance=JSON.parse(localStorage.getItem("attendance"));studentTable.innerHTML="<tr><th>Date</th><th>Time</th><th>Status</th></tr>";attendance.filter(a=>a.username===user.username).forEach(a=>{let badge=a.status==="Present"?"present":"absent";studentTable.innerHTML+=`<tr><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;});}
+function loadAttendance(){let selected=classFilterAttendance.value;let attendance=JSON.parse(localStorage.getItem("attendance"));adminTable.innerHTML="<tr><th>Name</th><th>Class</th><th>Roll No</th><th>Date</th><th>Time</th><th>Status</th></tr>";attendance.filter(a=>selected==="all"||a.className===selected).forEach(a=>{let badge=a.status==="Present"?"present":"absent";adminTable.innerHTML+=`<tr><td>${a.username}</td><td>${a.className}</td><td>${a.rollNo}</td><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;});}
+function downloadReport(){let attendance=JSON.parse(localStorage.getItem("attendance"));let csv="Name,Class,Roll No,Date,Time,Status\n";attendance.forEach(a=>{csv+=`${a.username},${a.className},${a.rollNo},${a.date},${a.time},${a.status}\n`;});let blob=new Blob([csv],{type:"text/csv"});let url=window.URL.createObjectURL(blob);let a=document.createElement("a");a.href=url;a.download="attendance_report.csv";a.click();}
 </script>
 
 </body>
