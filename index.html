@@ -15,15 +15,16 @@ html, body{
   width:100%;
   background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   color:#fff;
-  overflow-x:hidden;
+  overflow:hidden;
 }
 
 body{
   display:flex;
   justify-content:center;
   align-items:center;
-  padding:20px 15px;
-  min-height:100vh;
+  padding:0;
+  margin:0;
+  height:100vh;
 }
 
 /* Canvas */
@@ -41,11 +42,13 @@ body{
   position:relative;
   z-index:1;
   width:100%;
-  max-width:1100px;
+  height:100%;
   display:flex;
   flex-direction:column;
+  justify-content:center;
   align-items:center;
-  padding:0 10px;
+  padding:10px;
+  overflow-y:auto;
 }
 
 /* Card */
@@ -53,32 +56,39 @@ body{
   background:rgba(255,255,255,0.07);
   backdrop-filter:blur(20px);
   border-radius:20px;
-  padding:30px;
-  margin-bottom:25px;
+  padding:25px 30px;
+  margin:15px 0;
   box-shadow:0 15px 40px rgba(0,0,0,0.5);
   width:100%;
   max-width:700px;
-  transition: all 0.2s ease; /* smooth resize */
+  transition: all 0.2s ease;
+  display:flex;
+  flex-direction:column;
 }
 
-.login-box{max-width:420px;margin:120px auto;text-align:center;position:relative;}
+.login-box{
+  max-width:420px;
+  width:100%;
+  text-align:center;
+  position:relative;
+}
 
+/* Headings */
 h2,h3,h4{margin-bottom:20px;font-weight:600;text-align:center;}
+.info-box{margin-bottom:20px;line-height:1.8;font-size:16px;}
 
-.info-box{margin-bottom:25px;line-height:2;font-size:16px;}
-
+/* Inputs */
 input,select{
   width:100%;
   padding:12px 15px;
-  margin:10px 0;
+  margin:8px 0;
   border:none;
   border-radius:12px;
   background:rgba(255,255,255,0.1);
   color:#fff;
   font-size:14px;
-  transition: all 0.2s ease; /* smooth focus */
+  transition:0.2s;
 }
-
 input:focus{
   outline:none;
   background:rgba(255,255,255,0.15);
@@ -87,8 +97,9 @@ input:focus{
 select option{background:#203a43;color:#fff;}
 input::placeholder{color:#ddd;}
 
+/* Password toggle */
 .password-container{
-  position: relative;
+  position:relative;
 }
 .password-container input{
   padding-right:40px;
@@ -99,14 +110,14 @@ input::placeholder{color:#ddd;}
   right:12px;
   transform:translateY(-50%);
   cursor:pointer;
+  font-size:18px;
   color:#fff;
-  font-size:16px;
 }
 
 /* Buttons */
 button{
   display:block;
-  margin:20px auto;
+  margin:15px auto;
   padding:12px 25px;
   border:none;
   border-radius:12px;
@@ -116,12 +127,10 @@ button{
   transition:0.3s;
   font-weight:500;
 }
-
 button:hover{
   transform:translateY(-2px);
   box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
-
 .logout-btn{
   background:linear-gradient(45deg,#ff512f,#dd2476);
 }
@@ -130,65 +139,36 @@ button:hover{
 .table-wrapper-vertical{
   max-height:300px;
   overflow:auto;
-  margin-top:20px;
+  margin-top:15px;
   border-radius:12px;
   background:rgba(255,255,255,0.05);
 }
-
 .table-wrapper-vertical table{
   width:100%;
   border-collapse:collapse;
   min-width:500px;
 }
-
-#studentPanel .card, #adminPanel .card{
-  max-width:650px;
-  width:100%;
-}
-
-#studentPanel .table-wrapper-vertical{
-  max-height:none;
-  overflow:visible;
-}
-
 th,td{
   padding:10px;
   text-align:center;
   font-size:14px;
 }
-
 th{background:rgba(255,255,255,0.1);}
 tr:nth-child(even){background:rgba(255,255,255,0.05);}
-
 .badge{
   padding:6px 12px;
   border-radius:20px;
   font-size:12px;
   font-weight:500;
 }
-
 .present{background:#00c853;}
 .absent{background:#d50000;}
 .hidden{display:none;}
 
 /* Responsive */
-@media (max-width:1024px){
-  .card{max-width:90%;}
-}
-
-@media (max-width:768px){
-  .card{padding:22px;}
-  input,select,button{font-size:14px;}
-  th,td{padding:8px;font-size:13px;}
-}
-
-@media (max-width:480px){
-  body{padding:15px 10px;}
-  .card{padding:18px;border-radius:15px;}
-  h2,h3,h4{font-size:16px;}
-  input,select,button{font-size:12px;padding:8px;}
-  th,td{padding:5px;font-size:10px;}
-}
+@media(max-width:1024px){.card{max-width:90%;}}
+@media(max-width:768px){.card{padding:20px;}input,select,button{font-size:14px;}th,td{font-size:13px;padding:8px;}}
+@media(max-width:480px){.card{padding:18px;border-radius:15px;}h2,h3,h4{font-size:16px;}input,select,button{font-size:12px;padding:8px;}th,td{font-size:10px;padding:5px;}}
 </style>
 </head>
 <body>
@@ -204,7 +184,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 
 <div class="password-container">
 <input type="password" id="password" placeholder="Password">
-<span class="toggle-eye" onclick="togglePassword()">👁️</span>
+<span class="toggle-eye" onclick="togglePassword()">👁</span>
 </div>
 
 <button onclick="login()">Login</button>
@@ -214,7 +194,6 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <div id="studentPanel" class="hidden">
 <div class="card">
 <h3>Student Dashboard</h3>
-
 <div class="info-box">
 <p><strong>Name:</strong> <span id="studentName"></span></p>
 <p><strong>Class:</strong> <span id="studentClass"></span></p>
@@ -249,7 +228,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 
 <div class="password-container">
 <input type="password" id="newPass" placeholder="Password">
-<span class="toggle-eye" onclick="toggleNewPassword()">👁️</span>
+<span class="toggle-eye" onclick="toggleNewPassword()">👁</span>
 </div>
 
 <input type="number" id="newRoll" placeholder="Roll No">
@@ -305,122 +284,43 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 </div>
 
 <script>
-/* Spider Animation */
-const canvas = document.getElementById("spiderCanvas");
-const ctx = canvas.getContext("2d");
+/* Spider animation */
+const canvas=document.getElementById("spiderCanvas");
+const ctx=canvas.getContext("2d");
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 resizeCanvas();window.addEventListener("resize",resizeCanvas);
 let particles=[];const particleCount=80;const connectDistance=120;
 for(let i=0;i<particleCount;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5),vy:(Math.random()-0.5)});}
-function animate(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-for(let i=0;i<particles.length;i++){
-let p=particles[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;
-ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();}
-for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){
-let dx=particles[i].x-particles[j].x;let dy=particles[i].y-particles[j].y;let distance=Math.sqrt(dx*dx+dy*dy);
-if(distance<connectDistance){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
-ctx.strokeStyle=`rgba(255,255,255,${0.1+0.2*(connectDistance-distance)/connectDistance})`;ctx.lineWidth=1;ctx.stroke();}}}
-requestAnimationFrame(animate);}
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);
+for(let i=0;i<particles.length;i++){let p=particles[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();}
+for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){let dx=particles[i].x-particles[j].x;let dy=particles[i].y-particles[j].y;let distance=Math.sqrt(dx*dx+dy*dy);if(distance<connectDistance){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(255,255,255,${0.1+0.2*(connectDistance-distance)/connectDistance})`;ctx.lineWidth=1;ctx.stroke();}}}requestAnimationFrame(animate);}
 animate();
 
-/* Toggle Password */
-function togglePassword(){
-  const pass=document.getElementById("password");
-  pass.type=pass.type==="password"?"text":"password";
-}
-function toggleNewPassword(){
-  const pass=document.getElementById("newPass");
-  pass.type=pass.type==="password"?"text":"password";
-}
+/* Password toggle */
+function togglePassword(){const pass=document.getElementById("password");pass.type=pass.type==="password"?"text":"password";}
+function toggleNewPassword(){const pass=document.getElementById("newPass");pass.type=pass.type==="password"?"text":"password";}
 
 /* Storage & login */
 if(!localStorage.getItem("users")){localStorage.setItem("users",JSON.stringify([{username:"admin",password:"admin123",role:"admin"}]));}
 if(!localStorage.getItem("attendance")){localStorage.setItem("attendance",JSON.stringify([]));}
 
-function login(){
-let users=JSON.parse(localStorage.getItem("users"));
-let found=users.find(u=>u.username===username.value.trim()&&u.password===password.value.trim());
-if(!found){alert("Invalid Login");return;}
-localStorage.setItem("currentUser",JSON.stringify(found));
-loginSection.classList.add("hidden");
-if(found.role==="admin"){adminPanel.classList.remove("hidden");}
-else{
-studentPanel.classList.remove("hidden");
-studentName.innerText=found.username;
-studentClass.innerText=found.className;
-studentRoll.innerText=found.rollNo;
-loadStudentAttendance();
-}}
+function login(){let users=JSON.parse(localStorage.getItem("users"));let found=users.find(u=>u.username===username.value.trim()&&u.password===password.value.trim());if(!found){alert("Invalid Login");return;}localStorage.setItem("currentUser",JSON.stringify(found));loginSection.classList.add("hidden");if(found.role==="admin"){adminPanel.classList.remove("hidden");}else{studentPanel.classList.remove("hidden");studentName.innerText=found.username;studentClass.innerText=found.className;studentRoll.innerText=found.rollNo;loadStudentAttendance();}}
 
 function logout(){localStorage.removeItem("currentUser");location.reload();}
 
-function addStudent(){
-let users=JSON.parse(localStorage.getItem("users"));
-users.push({username:newStudent.value,password:newPass.value,rollNo:newRoll.value,className:newClass.value,role:"student"});
-localStorage.setItem("users",JSON.stringify(users));
-alert("Student Added");
-newStudent.value="";newPass.value="";newRoll.value="";newClass.value="";
-if(classFilterStudents.value) loadStudentsByClass();
-}
+function addStudent(){let users=JSON.parse(localStorage.getItem("users"));users.push({username:newStudent.value,password:newPass.value,rollNo:newRoll.value,className:newClass.value,role:"student"});localStorage.setItem("users",JSON.stringify(users));alert("Student Added");newStudent.value="";newPass.value="";newRoll.value="";newClass.value="";if(classFilterStudents.value) loadStudentsByClass();}
 
-function loadStudentsByClass(){
-let selected=classFilterStudents.value;
-let users=JSON.parse(localStorage.getItem("users"));
-studentsTable.innerHTML="<tr><th>Class</th><th>Roll No</th><th>Name</th><th>Action</th></tr>";
-users.filter(u=>u.role==="student"&&u.className===selected)
-.forEach(u=>{studentsTable.innerHTML+=`<tr><td>${u.className}</td><td>${u.rollNo}</td><td>${u.username}</td><td><button onclick="deleteStudent('${u.username}')">Delete</button></td></tr>`;});
-}
+function loadStudentsByClass(){let selected=classFilterStudents.value;let users=JSON.parse(localStorage.getItem("users"));studentsTable.innerHTML="<tr><th>Class</th><th>Roll No</th><th>Name</th><th>Action</th></tr>";users.filter(u=>u.role==="student"&&u.className===selected).forEach(u=>{studentsTable.innerHTML+=`<tr><td>${u.className}</td><td>${u.rollNo}</td><td>${u.username}</td><td><button onclick="deleteStudent('${u.username}')">Delete</button></td></tr>`;});}
 
-function deleteStudent(username){
-let users=JSON.parse(localStorage.getItem("users"));
-users=users.filter(u=>u.username!==username);
-localStorage.setItem("users",JSON.stringify(users));
-loadStudentsByClass();
-}
+function deleteStudent(username){let users=JSON.parse(localStorage.getItem("users"));users=users.filter(u=>u.username!==username);localStorage.setItem("users",JSON.stringify(users));loadStudentsByClass();}
 
-function markAttendance(){
-let user=JSON.parse(localStorage.getItem("currentUser"));
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-let now=new Date();
-attendance.push({username:user.username,rollNo:user.rollNo,className:user.className,date:now.toLocaleDateString(),time:now.toLocaleTimeString(),status:statusSelect.value});
-localStorage.setItem("attendance",JSON.stringify(attendance));
-loadStudentAttendance();
-}
+function markAttendance(){let user=JSON.parse(localStorage.getItem("currentUser"));let attendance=JSON.parse(localStorage.getItem("attendance"));let now=new Date();attendance.push({username:user.username,rollNo:user.rollNo,className:user.className,date:now.toLocaleDateString(),time:now.toLocaleTimeString(),status:statusSelect.value});localStorage.setItem("attendance",JSON.stringify(attendance));loadStudentAttendance();}
 
-function loadStudentAttendance(){
-let user=JSON.parse(localStorage.getItem("currentUser"));
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-studentTable.innerHTML="<tr><th>Date</th><th>Time</th><th>Status</th></tr>";
-attendance.filter(a=>a.username===user.username).forEach(a=>{
-let badge=a.status==="Present"?"present":"absent";
-studentTable.innerHTML+=`<tr><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;
-});
-}
+function loadStudentAttendance(){let user=JSON.parse(localStorage.getItem("currentUser"));let attendance=JSON.parse(localStorage.getItem("attendance"));studentTable.innerHTML="<tr><th>Date</th><th>Time</th><th>Status</th></tr>";attendance.filter(a=>a.username===user.username).forEach(a=>{let badge=a.status==="Present"?"present":"absent";studentTable.innerHTML+=`<tr><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;});}
 
-function loadAttendance(){
-let selected=classFilterAttendance.value;
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-adminTable.innerHTML="<tr><th>Name</th><th>Class</th><th>Roll No</th><th>Date</th><th>Time</th><th>Status</th></tr>";
-attendance.filter(a=>selected==="all"||a.className===selected).forEach(a=>{
-let badge=a.status==="Present"?"present":"absent";
-adminTable.innerHTML+=`<tr><td>${a.username}</td><td>${a.className}</td><td>${a.rollNo}</td><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;
-});
-}
+function loadAttendance(){let selected=classFilterAttendance.value;let attendance=JSON.parse(localStorage.getItem("attendance"));adminTable.innerHTML="<tr><th>Name</th><th>Class</th><th>Roll No</th><th>Date</th><th>Time</th><th>Status</th></tr>";attendance.filter(a=>selected==="all"||a.className===selected).forEach(a=>{let badge=a.status==="Present"?"present":"absent";adminTable.innerHTML+=`<tr><td>${a.username}</td><td>${a.className}</td><td>${a.rollNo}</td><td>${a.date}</td><td>${a.time}</td><td><span class="badge ${badge}">${a.status}</span></td></tr>`;});}
 
-function downloadReport(){
-let attendance=JSON.parse(localStorage.getItem("attendance"));
-let csv="Name,Class,Roll No,Date,Time,Status\n";
-attendance.forEach(a=>{
-csv+=`${a.username},${a.className},${a.rollNo},${a.date},${a.time},${a.status}\n`;
-});
-let blob=new Blob([csv],{type:"text/csv"});
-let url=window.URL.createObjectURL(blob);
-let a=document.createElement("a");
-a.href=url;
-a.download="attendance_report.csv";
-a.click();
-}
+function downloadReport(){let attendance=JSON.parse(localStorage.getItem("attendance"));let csv="Name,Class,Roll No,Date,Time,Status\n";attendance.forEach(a=>{csv+=`${a.username},${a.className},${a.rollNo},${a.date},${a.time},${a.status}\n`;});let blob=new Blob([csv],{type:"text/csv"});let url=window.URL.createObjectURL(blob);let a=document.createElement("a");a.href=url;a.download="attendance_report.csv";a.click();}
 </script>
 
 </body>
