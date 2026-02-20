@@ -58,9 +58,10 @@ body{
   box-shadow:0 15px 40px rgba(0,0,0,0.5);
   width:100%;
   max-width:700px;
+  transition: all 0.2s ease; /* smooth resize */
 }
 
-.login-box{max-width:420px;margin:120px auto;text-align:center;}
+.login-box{max-width:420px;margin:120px auto;text-align:center;position:relative;}
 
 h2,h3,h4{margin-bottom:20px;font-weight:600;text-align:center;}
 
@@ -68,17 +69,41 @@ h2,h3,h4{margin-bottom:20px;font-weight:600;text-align:center;}
 
 input,select{
   width:100%;
-  padding:12px;
+  padding:12px 15px;
   margin:10px 0;
   border:none;
   border-radius:12px;
   background:rgba(255,255,255,0.1);
   color:#fff;
+  font-size:14px;
+  transition: all 0.2s ease; /* smooth focus */
+}
+
+input:focus{
+  outline:none;
+  background:rgba(255,255,255,0.15);
 }
 
 select option{background:#203a43;color:#fff;}
 input::placeholder{color:#ddd;}
 
+.password-container{
+  position: relative;
+}
+.password-container input{
+  padding-right:40px;
+}
+.password-container .toggle-eye{
+  position:absolute;
+  top:50%;
+  right:12px;
+  transform:translateY(-50%);
+  cursor:pointer;
+  color:#fff;
+  font-size:16px;
+}
+
+/* Buttons */
 button{
   display:block;
   margin:20px auto;
@@ -93,8 +118,8 @@ button{
 }
 
 button:hover{
-  transform:translateY(-3px);
-  box-shadow:0 8px 25px rgba(0,0,0,0.4);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
 
 .logout-btn{
@@ -113,10 +138,10 @@ button:hover{
 .table-wrapper-vertical table{
   width:100%;
   border-collapse:collapse;
-  min-width:500px; /* horizontal scroll on mobile */
+  min-width:500px;
 }
 
-#studentPanel .card{
+#studentPanel .card, #adminPanel .card{
   max-width:650px;
   width:100%;
 }
@@ -176,7 +201,12 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <div id="loginSection" class="card login-box">
 <h2>Attendance Portal</h2>
 <input type="text" id="username" placeholder="Username">
+
+<div class="password-container">
 <input type="password" id="password" placeholder="Password">
+<span class="toggle-eye" onclick="togglePassword()">👁️</span>
+</div>
+
 <button onclick="login()">Login</button>
 </div>
 
@@ -216,7 +246,12 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <div class="card">
 <h4>Add Student</h4>
 <input type="text" id="newStudent" placeholder="Student Username">
+
+<div class="password-container">
 <input type="password" id="newPass" placeholder="Password">
+<span class="toggle-eye" onclick="toggleNewPassword()">👁️</span>
+</div>
+
 <input type="number" id="newRoll" placeholder="Roll No">
 <select id="newClass">
 <option value="">Select Class</option>
@@ -270,67 +305,34 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 </div>
 
 <script>
-/* Spider Animation Fixed */
+/* Spider Animation */
 const canvas = document.getElementById("spiderCanvas");
 const ctx = canvas.getContext("2d");
-
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-let particles = [];
-const particleCount = 80;
-const connectDistance = 120;
-
-for (let i = 0; i < particleCount; i++) {
-    particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5),
-        vy: (Math.random() - 0.5)
-    });
-}
-
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = "white";
-        ctx.fill();
-    }
-
-    // Connect lines
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            let dx = particles[i].x - particles[j].x;
-            let dy = particles[i].y - particles[j].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < connectDistance) {
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.strokeStyle = `rgba(255,255,255,${0.1 + 0.2*(connectDistance-distance)/connectDistance})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            }
-        }
-    }
-
-    requestAnimationFrame(animate);
-}
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resizeCanvas();window.addEventListener("resize",resizeCanvas);
+let particles=[];const particleCount=80;const connectDistance=120;
+for(let i=0;i<particleCount;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5),vy:(Math.random()-0.5)});}
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+for(let i=0;i<particles.length;i++){
+let p=particles[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;
+ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();}
+for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){
+let dx=particles[i].x-particles[j].x;let dy=particles[i].y-particles[j].y;let distance=Math.sqrt(dx*dx+dy*dy);
+if(distance<connectDistance){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+ctx.strokeStyle=`rgba(255,255,255,${0.1+0.2*(connectDistance-distance)/connectDistance})`;ctx.lineWidth=1;ctx.stroke();}}}
+requestAnimationFrame(animate);}
 animate();
+
+/* Toggle Password */
+function togglePassword(){
+  const pass=document.getElementById("password");
+  pass.type=pass.type==="password"?"text":"password";
+}
+function toggleNewPassword(){
+  const pass=document.getElementById("newPass");
+  pass.type=pass.type==="password"?"text":"password";
+}
 
 /* Storage & login */
 if(!localStorage.getItem("users")){localStorage.setItem("users",JSON.stringify([{username:"admin",password:"admin123",role:"admin"}]));}
