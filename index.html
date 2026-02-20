@@ -8,17 +8,38 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-html,body{min-height:100%;width:100%;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;overflow-x:hidden;}
+html,body{height:100%;width:100%;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;overflow-x:hidden;}
 body{display:flex;justify-content:center;align-items:center;padding:0;}
 
 /* Canvas */
 #spiderCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
 
-/* Container */
-.container{position:relative; z-index:1; width:100%; max-width:900px; display:flex; flex-direction:column; align-items:center; padding:15px;}
+/* Container center everything */
+.container{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:900px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center; /* vertical center */
+  min-height:100vh;
+  padding:15px;
+}
 
 /* Card */
-.card{background:rgba(255,255,255,0.07);backdrop-filter:blur(20px);border-radius:20px;padding:25px;margin-bottom:20px;box-shadow:0 15px 40px rgba(0,0,0,0.5);width:100%;max-width:700px;transition: all 0.3s ease;}
+.card{
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(20px);
+  border-radius:20px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.5);
+  width:100%;
+  max-width:700px;
+  transition: all 0.3s ease;
+}
 h2,h3,h4{margin-bottom:20px;font-weight:600;text-align:center;}
 .info-box{margin-bottom:20px;line-height:1.8;font-size:16px;}
 input,select{width:100%;padding:12px 15px;margin:8px 0;border:none;border-radius:12px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;}
@@ -57,12 +78,8 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 .absent{background:#d50000;}
 .hidden{display:none;}
 
-/* Student panel */
-#studentPanel .card{max-width:650px;width:100%;}
-#studentPanel .table-wrapper-vertical{max-height:none;overflow:visible;}
-
-/* Admin panel */
-#adminPanel .card{max-width:700px;width:100%;}
+/* Student & Admin Panel Cards */
+#studentPanel .card,#adminPanel .card{max-width:700px;width:100%;margin:10px auto;}
 
 /* Responsive adjustments */
 @media (max-width:1024px){.card{max-width:90%;}}
@@ -178,19 +195,17 @@ for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){let dx
 requestAnimationFrame(animate);}
 animate();
 
-/* Storage & Login */
+/* LocalStorage & Login */
 if(!localStorage.getItem("users")){localStorage.setItem("users",JSON.stringify([{username:"admin",password:"admin123",role:"admin"}]));}
 if(!localStorage.getItem("attendance")){localStorage.setItem("attendance",JSON.stringify([]));}
 
-/* Toggle eye icon */
+/* Toggle password eye */
 function togglePassword(){
   const pwd=document.getElementById("password");
-  const eye=document.getElementById("eyeIcon");
-  if(pwd.type==="password"){pwd.type="text";}
-  else{pwd.type="password";}
+  pwd.type=pwd.type==="password"?"text":"password";
 }
 
-/* Login/Logout functions */
+/* Login / Logout / Add Student / Attendance Functions */
 function login(){
 let users=JSON.parse(localStorage.getItem("users"));
 let found=users.find(u=>u.username===username.value.trim()&&u.password===password.value.trim());
