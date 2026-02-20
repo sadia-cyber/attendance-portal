@@ -8,28 +8,38 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-html,body{
-  min-height:100vh;width:100%;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:#fff;overflow-x:hidden;
-}
-body{display:flex;justify-content:center;align-items:flex-start;padding:20px 10px;}
+html,body{min-height:100%;width:100%;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;overflow-x:hidden;}
+body{display:flex;justify-content:center;align-items:center;padding:0;}
 
 /* Canvas */
 #spiderCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
 
 /* Container */
-.container{position:relative; z-index:1; width:100%; max-width:1100px; margin-top:50px; display:flex; flex-direction:column; align-items:center; padding:0 10px;}
+.container{position:relative; z-index:1; width:100%; max-width:900px; display:flex; flex-direction:column; align-items:center; padding:15px;}
 
 /* Card */
 .card{background:rgba(255,255,255,0.07);backdrop-filter:blur(20px);border-radius:20px;padding:25px;margin-bottom:20px;box-shadow:0 15px 40px rgba(0,0,0,0.5);width:100%;max-width:700px;transition: all 0.3s ease;}
-.login-box{max-width:95%;margin:60px auto 0;text-align:center;}
 h2,h3,h4{margin-bottom:20px;font-weight:600;text-align:center;}
 .info-box{margin-bottom:20px;line-height:1.8;font-size:16px;}
 input,select{width:100%;padding:12px 15px;margin:8px 0;border:none;border-radius:12px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;}
-input::placeholder{color:#ddd;} select option{background:#203a43;color:#fff;}
+input::placeholder{color:#ddd;}
+select option{background:#203a43;color:#fff;}
+
+/* Password eye wrapper */
 .password-wrapper{position:relative;}
-.password-wrapper input{padding-right:50px;}
-.password-wrapper .toggle-password{position:absolute;top:50%;right:12px;transform:translateY(-50%);background:none;border:none;color:#fff;cursor:pointer;font-size:13px;}
+.password-wrapper input{padding-right:45px;}
+.password-wrapper .toggle-password{
+  position:absolute;
+  top:50%;
+  right:12px;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  cursor:pointer;
+  fill:#fff;
+  width:22px;
+  height:22px;
+}
 
 /* Buttons */
 button{display:block;margin:15px auto;padding:12px 25px;border:none;border-radius:12px;background:linear-gradient(45deg,#00f2fe,#4facfe);color:white;cursor:pointer;transition:0.3s;font-weight:500;}
@@ -47,20 +57,23 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 .absent{background:#d50000;}
 .hidden{display:none;}
 
-/* Student panel adjustments */
+/* Student panel */
 #studentPanel .card{max-width:650px;width:100%;}
 #studentPanel .table-wrapper-vertical{max-height:none;overflow:visible;}
 
-/* Responsive */
+/* Admin panel */
+#adminPanel .card{max-width:700px;width:100%;}
+
+/* Responsive adjustments */
 @media (max-width:1024px){.card{max-width:90%;}}
 @media (max-width:768px){
-  .card{padding:20px;}
+  .card{padding:18px;}
   input,select,button{font-size:13px;}
   th,td{padding:6px;font-size:12px;}
 }
 @media (max-width:480px){
   body{padding:10px;}
-  .card{padding:16px;border-radius:15px;}
+  .card{padding:15px;border-radius:15px;}
   h2,h3,h4{font-size:17px;}
   input,select,button{font-size:12px;padding:10px;}
   th,td{padding:4px;font-size:11px;}
@@ -79,7 +92,10 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <input type="text" id="username" placeholder="Username">
 <div class="password-wrapper">
   <input type="password" id="password" placeholder="Password">
-  <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
+  <button type="button" class="toggle-password" onclick="togglePassword()">
+    <!-- Eye SVG -->
+    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z"/><circle id="pupil" cx="12" cy="12" r="2.5"/></svg>
+  </button>
 </div>
 <button onclick="login()">Login</button>
 </div>
@@ -152,8 +168,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 
 <script>
 /* Spider Animation */
-const canvas=document.getElementById("spiderCanvas");
-const ctx=canvas.getContext("2d");
+const canvas=document.getElementById("spiderCanvas");const ctx=canvas.getContext("2d");
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 resizeCanvas();window.addEventListener("resize",resizeCanvas);
 let particles=[];const particleCount=80;const connectDistance=120;
@@ -163,17 +178,19 @@ for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){let dx
 requestAnimationFrame(animate);}
 animate();
 
-/* Storage & login */
+/* Storage & Login */
 if(!localStorage.getItem("users")){localStorage.setItem("users",JSON.stringify([{username:"admin",password:"admin123",role:"admin"}]));}
 if(!localStorage.getItem("attendance")){localStorage.setItem("attendance",JSON.stringify([]));}
 
+/* Toggle eye icon */
 function togglePassword(){
   const pwd=document.getElementById("password");
-  const btn=document.querySelector(".toggle-password");
-  if(pwd.type==="password"){pwd.type="text";btn.innerText="Hide";}
-  else{pwd.type="password";btn.innerText="Show";}
+  const eye=document.getElementById("eyeIcon");
+  if(pwd.type==="password"){pwd.type="text";}
+  else{pwd.type="password";}
 }
 
+/* Login/Logout functions */
 function login(){
 let users=JSON.parse(localStorage.getItem("users"));
 let found=users.find(u=>u.username===username.value.trim()&&u.password===password.value.trim());
@@ -183,7 +200,6 @@ loginSection.classList.add("hidden");
 if(found.role==="admin"){adminPanel.classList.remove("hidden");}
 else{studentPanel.classList.remove("hidden");studentName.innerText=found.username;studentClass.innerText=found.className;studentRoll.innerText=found.rollNo;loadStudentAttendance();}
 }
-
 function logout(){localStorage.removeItem("currentUser");location.reload();}
 function addStudent(){let users=JSON.parse(localStorage.getItem("users"));users.push({username:newStudent.value,password:newPass.value,rollNo:newRoll.value,className:newClass.value,role:"student"});localStorage.setItem("users",JSON.stringify(users));alert("Student Added");newStudent.value="";newPass.value="";newRoll.value="";newClass.value="";if(classFilterStudents.value) loadStudentsByClass();}
 function loadStudentsByClass(){let selected=classFilterStudents.value;let users=JSON.parse(localStorage.getItem("users"));studentsTable.innerHTML="<tr><th>Class</th><th>Roll No</th><th>Name</th><th>Action</th></tr>";users.filter(u=>u.role==="student"&&u.className===selected).forEach(u=>{studentsTable.innerHTML+=`<tr><td>${u.className}</td><td>${u.rollNo}</td><td>${u.username}</td><td><button onclick="deleteStudent('${u.username}')">Delete</button></td></tr>`;});}
