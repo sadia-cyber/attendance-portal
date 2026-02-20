@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Attendance Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -11,10 +11,8 @@
 html,body{height:100%;width:100%;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);color:#fff;overflow-x:hidden;}
 body{display:flex;justify-content:center;align-items:center;padding:0;}
 
-/* Canvas */
 #spiderCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
 
-/* Container center everything */
 .container{
   position:relative;
   z-index:1;
@@ -23,12 +21,12 @@ body{display:flex;justify-content:center;align-items:center;padding:0;}
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center; /* vertical center */
+  justify-content:center;
   min-height:100vh;
   padding:15px;
 }
 
-/* Card */
+/* Card styling */
 .card{
   background:rgba(255,255,255,0.07);
   backdrop-filter:blur(20px);
@@ -46,7 +44,7 @@ input,select{width:100%;padding:12px 15px;margin:8px 0;border:none;border-radius
 input::placeholder{color:#ddd;}
 select option{background:#203a43;color:#fff;}
 
-/* Password eye wrapper */
+/* Password eye toggle */
 .password-wrapper{position:relative;}
 .password-wrapper input{padding-right:45px;}
 .password-wrapper .toggle-password{
@@ -57,7 +55,6 @@ select option{background:#203a43;color:#fff;}
   background:none;
   border:none;
   cursor:pointer;
-  fill:#fff;
   width:22px;
   height:22px;
 }
@@ -78,18 +75,19 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 .absent{background:#d50000;}
 .hidden{display:none;}
 
-/* Student & Admin Panel Cards */
-#studentPanel .card,#adminPanel .card{max-width:700px;width:100%;margin:10px auto;}
+/* Student panel */
+#studentPanel .card{max-width:700px;width:100%;margin:10px auto;}
 
-/* Admin top margin for spacing */
-#adminPanel{margin-top:30px;}
+/* Admin panel top margin */
+#adminPanel{margin-top:70px;width:100%;display:flex;flex-direction:column;align-items:center;}
 
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width:1024px){.card{max-width:90%;}}
 @media (max-width:768px){
   .card{padding:18px;}
   input,select,button{font-size:13px;}
   th,td{padding:6px;font-size:12px;}
+  #adminPanel{margin-top:40px;}
 }
 @media (max-width:480px){
   body{padding:10px;}
@@ -97,6 +95,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
   h2,h3,h4{font-size:17px;}
   input,select,button{font-size:12px;padding:10px;}
   th,td{padding:4px;font-size:11px;}
+  #adminPanel{margin-top:20px;}
 }
 </style>
 </head>
@@ -113,8 +112,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <div class="password-wrapper">
   <input type="password" id="password" placeholder="Password">
   <button type="button" class="toggle-password" onclick="togglePassword()">
-    <!-- Eye SVG -->
-    <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z"/><circle id="pupil" cx="12" cy="12" r="2.5"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22"><path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z"/><circle cx="12" cy="12" r="2.5"/></svg>
   </button>
 </div>
 <button onclick="login()">Login</button>
@@ -188,7 +186,8 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 
 <script>
 /* Spider Animation */
-const canvas=document.getElementById("spiderCanvas");const ctx=canvas.getContext("2d");
+const canvas=document.getElementById("spiderCanvas");
+const ctx=canvas.getContext("2d");
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 resizeCanvas();window.addEventListener("resize",resizeCanvas);
 let particles=[];const particleCount=80;const connectDistance=120;
@@ -198,7 +197,7 @@ for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){let dx
 requestAnimationFrame(animate);}
 animate();
 
-/* LocalStorage & Login */
+/* LocalStorage & login */
 if(!localStorage.getItem("users")){localStorage.setItem("users",JSON.stringify([{username:"admin",password:"admin123",role:"admin"}]));}
 if(!localStorage.getItem("attendance")){localStorage.setItem("attendance",JSON.stringify([]));}
 
