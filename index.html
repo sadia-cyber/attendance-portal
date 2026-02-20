@@ -4,169 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Attendance Portal</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-html, body{
-  min-height:100vh;
-  width:100%;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:#fff;
-  overflow-x:hidden;
+html,body{
+  min-height:100vh;width:100%;background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:#fff;overflow-x:hidden;
 }
-body{
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:20px 15px;
-}
+body{display:flex;justify-content:center;align-items:flex-start;padding:20px 10px;}
 
 /* Canvas */
-#spiderCanvas{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index:0;
-}
+#spiderCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
 
 /* Container */
-.container{
-  position:relative;
-  z-index:1;
-  width:100%;
-  max-width:1100px;
-  margin-top:60px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:0 10px;
-}
+.container{position:relative; z-index:1; width:100%; max-width:1100px; margin-top:50px; display:flex; flex-direction:column; align-items:center; padding:0 10px;}
 
 /* Card */
-.card{
-  background:rgba(255,255,255,0.07);
-  backdrop-filter:blur(20px);
-  border-radius:20px;
-  padding:30px;
-  margin-bottom:25px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.5);
-  width:100%;
-  max-width:700px;
-  transition: all 0.3s ease;
-}
-
-.login-box{
-  max-width:95%;
-  margin:60px auto 0;
-  text-align:center;
-}
-
+.card{background:rgba(255,255,255,0.07);backdrop-filter:blur(20px);border-radius:20px;padding:25px;margin-bottom:20px;box-shadow:0 15px 40px rgba(0,0,0,0.5);width:100%;max-width:700px;transition: all 0.3s ease;}
+.login-box{max-width:95%;margin:60px auto 0;text-align:center;}
 h2,h3,h4{margin-bottom:20px;font-weight:600;text-align:center;}
-.info-box{margin-bottom:25px;line-height:2;font-size:16px;}
-
-input,select{
-  width:100%;
-  padding:12px 15px;
-  margin:10px 0;
-  border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,0.1);
-  color:#fff;
-  font-size:14px;
-}
-input::placeholder{color:#ddd;}
-select option{background:#203a43;color:#fff;}
-
-.password-wrapper{
-  position:relative;
-}
-.password-wrapper input{
-  padding-right:45px;
-}
-.password-wrapper .toggle-password{
-  position:absolute;
-  top:50%;
-  right:12px;
-  transform:translateY(-50%);
-  background:none;
-  border:none;
-  color:#fff;
-  cursor:pointer;
-  font-size:14px;
-}
+.info-box{margin-bottom:20px;line-height:1.8;font-size:16px;}
+input,select{width:100%;padding:12px 15px;margin:8px 0;border:none;border-radius:12px;background:rgba(255,255,255,0.1);color:#fff;font-size:14px;}
+input::placeholder{color:#ddd;} select option{background:#203a43;color:#fff;}
+.password-wrapper{position:relative;}
+.password-wrapper input{padding-right:50px;}
+.password-wrapper .toggle-password{position:absolute;top:50%;right:12px;transform:translateY(-50%);background:none;border:none;color:#fff;cursor:pointer;font-size:13px;}
 
 /* Buttons */
-button{
-  display:block;
-  margin:20px auto;
-  padding:12px 25px;
-  border:none;
-  border-radius:12px;
-  background:linear-gradient(45deg,#00f2fe,#4facfe);
-  color:white;
-  cursor:pointer;
-  transition:0.3s;
-  font-weight:500;
-}
-button:hover{
-  transform:translateY(-3px);
-  box-shadow:0 8px 25px rgba(0,0,0,0.4);
-}
+button{display:block;margin:15px auto;padding:12px 25px;border:none;border-radius:12px;background:linear-gradient(45deg,#00f2fe,#4facfe);color:white;cursor:pointer;transition:0.3s;font-weight:500;}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.4);}
 .logout-btn{background:linear-gradient(45deg,#ff512f,#dd2476);}
 
 /* Tables */
-.table-wrapper-vertical{
-  max-height:300px;
-  overflow:auto;
-  margin-top:20px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.05);
-}
-.table-wrapper-vertical table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:500px;
-}
-
-th,td{
-  padding:10px;
-  text-align:center;
-  font-size:14px;
-}
+.table-wrapper-vertical{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:15px;background:rgba(255,255,255,0.05);border-radius:12px;max-height:350px;}
+.table-wrapper-vertical table{width:100%;border-collapse:collapse;min-width:400px;}
+th,td{padding:8px;text-align:center;font-size:13px;}
 th{background:rgba(255,255,255,0.1);}
 tr:nth-child(even){background:rgba(255,255,255,0.05);}
-.badge{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;}
+.badge{padding:5px 10px;border-radius:20px;font-size:12px;font-weight:500;}
 .present{background:#00c853;}
 .absent{background:#d50000;}
 .hidden{display:none;}
 
-/* Student panel wide & scroll-free */
-#studentPanel .card{
-  max-width:650px;
-  width:100%;
-}
-#studentPanel .table-wrapper-vertical{
-  max-height:none;
-  overflow:visible;
-}
+/* Student panel adjustments */
+#studentPanel .card{max-width:650px;width:100%;}
+#studentPanel .table-wrapper-vertical{max-height:none;overflow:visible;}
 
 /* Responsive */
 @media (max-width:1024px){.card{max-width:90%;}}
 @media (max-width:768px){
-  .card{padding:22px;}
-  input,select,button{font-size:14px;}
-  th,td{padding:8px;font-size:13px;}
+  .card{padding:20px;}
+  input,select,button{font-size:13px;}
+  th,td{padding:6px;font-size:12px;}
 }
 @media (max-width:480px){
-  body{padding:15px 10px;}
-  .card{padding:18px;border-radius:15px;}
-  h2,h3,h4{font-size:18px;}
-  input,select,button{font-size:13px;padding:10px;}
-  th,td{padding:6px;font-size:11px;}
+  body{padding:10px;}
+  .card{padding:16px;border-radius:15px;}
+  h2,h3,h4{font-size:17px;}
+  input,select,button{font-size:12px;padding:10px;}
+  th,td{padding:4px;font-size:11px;}
 }
 </style>
 </head>
@@ -220,10 +117,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <input type="number" id="newRoll" placeholder="Roll No">
 <select id="newClass">
 <option value="">Select Class</option>
-<option>ICS</option>
-<option>ICOM</option>
-<option>FA</option>
-<option>FSC</option>
+<option>ICS</option><option>ICOM</option><option>FA</option><option>FSC</option>
 </select>
 <button onclick="addStudent()">Add Student</button>
 </div>
@@ -231,10 +125,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <h4>Students By Class</h4>
 <select id="classFilterStudents" onchange="loadStudentsByClass()">
 <option value="">Select Class</option>
-<option>ICS</option>
-<option>ICOM</option>
-<option>FA</option>
-<option>FSC</option>
+<option>ICS</option><option>ICOM</option><option>FA</option><option>FSC</option>
 </select>
 <div class="table-wrapper-vertical">
 <table id="studentsTable">
@@ -245,11 +136,7 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 <div class="card">
 <h4>Attendance Report</h4>
 <select id="classFilterAttendance" onchange="loadAttendance()">
-<option value="all">All</option>
-<option>ICS</option>
-<option>ICOM</option>
-<option>FA</option>
-<option>FSC</option>
+<option value="all">All</option><option>ICS</option><option>ICOM</option><option>FA</option><option>FSC</option>
 </select>
 <div class="table-wrapper-vertical">
 <table id="adminTable">
@@ -268,20 +155,15 @@ tr:nth-child(even){background:rgba(255,255,255,0.05);}
 const canvas=document.getElementById("spiderCanvas");
 const ctx=canvas.getContext("2d");
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-resizeCanvas();
-window.addEventListener("resize",resizeCanvas);
-let particles=[];
-const particleCount=80;
-const connectDistance=120;
+resizeCanvas();window.addEventListener("resize",resizeCanvas);
+let particles=[];const particleCount=80;const connectDistance=120;
 for(let i=0;i<particleCount;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5),vy:(Math.random()-0.5)});}
-function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);
-for(let i=0;i<particles.length;i++){let p=particles[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;
-ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();}
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let i=0;i<particles.length;i++){let p=particles[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>canvas.width)p.vx*=-1;if(p.y<0||p.y>canvas.height)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,2,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();}
 for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){let dx=particles[i].x-particles[j].x;let dy=particles[i].y-particles[j].y;let dist=Math.sqrt(dx*dx+dy*dy);if(dist<connectDistance){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(255,255,255,${0.1+0.2*(connectDistance-dist)/connectDistance})`;ctx.lineWidth=1;ctx.stroke();}}}
 requestAnimationFrame(animate);}
 animate();
 
-/* Storage & Login */
+/* Storage & login */
 if(!localStorage.getItem("users")){localStorage.setItem("users",JSON.stringify([{username:"admin",password:"admin123",role:"admin"}]));}
 if(!localStorage.getItem("attendance")){localStorage.setItem("attendance",JSON.stringify([]));}
 
